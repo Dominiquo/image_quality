@@ -1,5 +1,3 @@
-# VIA https://gist.github.com/baraldilorenzo/07d7802847aaad0a35d3
-
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D
@@ -8,7 +6,8 @@ import cv2, numpy as np
 
 def VGG_16(weights_path=None):
     model = Sequential()
-    model.add(ZeroPadding2D((1,1),input_shape=(3,224,224)))
+    input_shape = (150,150,3)
+    model.add(ZeroPadding2D((1,1),input_shape=input_shape))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1,1)))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
@@ -59,7 +58,7 @@ def VGG_16(weights_path=None):
 if __name__ == "__main__":
     # Test pretrained model
     print 'loading model...'
-    model = VGG_16('../serialized_objects/vgg16_weights.h5')
+    model = VGG_16('serialized_objects/vgg16_weights.h5')
     print 'success...'
 
     # sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
