@@ -2,6 +2,7 @@ from datatypes import ImageQuality
 from models import Models, CNN_models
 from DataProcessing import transformations, ImageGenerator
 from misc import utils
+import sys
 
 def run_canny_linear_model(create_data=False):
 	obj_path = 'serialized_objects/iqual_obj.p'
@@ -27,26 +28,31 @@ def run_canny_linear_model(create_data=False):
 
 
 
-def run_cnn_model(create_data=False):
-	obj_path = 'serialized_objects/iqual_obj_cnn.p'
-	pos_path =  'data/goodbadcombined/clear_leaves/'
-	neg_path = 'data/goodbadcombined/bad_image/'
-	size = (128, 128)
-
-	# TRANSFORMATION
-	if create_data:
-		resize_images = lambda img: transformations.resize_all_images(img, size)
-		iqual = ImageQuality.ImageQuality(pos_path, neg_path)
-		iqual.get_image_vectors()
-		iqual.apply_transformation(resize_images)
-		utils.store_object(iqual, obj_path)
-	else:
-		iqual = utils.load_object(obj_path)
+def run_cnn_model(store_path, epochs=50, steps_per_epoch=2000, validation_steps=800):
+	train_generator, validation_generator = ImageGenerator.get_generator()
 
 	print 'getting CNN...'
 	model_cnn = CNN_models.get_cnn()
 	print 'fitting model on training data'
-	X_train, X_test, y_train, y_test = iqual.partition_train_test(test_size=.3, random_state=42)
-	model_cnn.fit(X_train, y_train)
-	print model_cnn.evaluate(X_test, y_test)
-	return model_cnn
+
+	history = model_cnn.fit_generator(
+        train_generator,
+        steps_per_epoch=steps_per_epoch,
+        epochs=epochs,
+        validation_data=validation_generator,
+        validation_steps=validation_steps)
+
+	model.save_weights(store_path) 
+	return None
+
+
+def Main(args):
+	store_path = args[1]
+	epochs = int(args[2])
+	steps_per_epoch = int(args[3])
+	validation_steps = int(args[4])
+
+	run_cnn_model(store_path, epochs, steps_per_epoch, validation_steps)
+
+if __name__ == '__main__':
+	Main(sys.argv)
