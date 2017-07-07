@@ -1,30 +1,30 @@
 from datatypes import ImageQuality
 from models import Models, CNN_models
 from DataProcessing import transformations, ImageGenerator
-from misc import utils
+# from misc import utils
 import sys
 
-def run_canny_linear_model(create_data=False):
-	obj_path = 'serialized_objects/iqual_obj.p'
-	pos_path =  'data/goodbadcombined/clear_leaves/'
-	neg_path = 'data/goodbadcombined/bad_image/'
+# def run_canny_linear_model(create_data=False):
+# 	obj_path = 'serialized_objects/iqual_obj.p'
+# 	pos_path =  'data/goodbadcombined/clear_leaves/'
+# 	neg_path = 'data/goodbadcombined/bad_image/'
 
-	# TRANSFORMATION
-	if create_data:
-		canny_edge = transformations.canny_edge_avg_pixels
-		iqual = ImageQuality.ImageQuality(pos_path, neg_path)
-		iqual.get_image_vectors(image_setting=0)
-		iqual.apply_transformation(canny_edge)
-		utils.store_object(iqual, obj_path)
-	else:
-		iqual = utils.load_object(obj_path)
+# 	# TRANSFORMATION
+# 	if create_data:
+# 		canny_edge = transformations.canny_edge_avg_pixels
+# 		iqual = ImageQuality.ImageQuality(pos_path, neg_path)
+# 		iqual.get_image_vectors(image_setting=0)
+# 		iqual.apply_transformation(canny_edge)
+# 		utils.store_object(iqual, obj_path)
+# 	else:
+# 		iqual = utils.load_object(obj_path)
 
 
-	print 'getting linear model...'
-	lin_model = Models.get_linearreg_model()
-	print 'fitting model on training data'
-	print iqual.apply_sklearn_model(model=lin_model)
-	return lin_model
+# 	print 'getting linear model...'
+# 	lin_model = Models.get_linearreg_model()
+# 	print 'fitting model on training data'
+# 	print iqual.apply_sklearn_model(model=lin_model)
+# 	return lin_model
 
 
 
