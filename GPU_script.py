@@ -16,7 +16,7 @@ def run_cnn_model(store_path, epochs=50, steps_per_epoch=2000, validation_steps=
         validation_data=validation_generator,
         validation_steps=validation_steps)
 
-	model.save_weights(store_path) 
+	model_cnn.save_weights(store_path) 
 	return None
 
 
