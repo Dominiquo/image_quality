@@ -1,4 +1,4 @@
-from models import Models, CNN_models
+from models import CNN_models
 from DataProcessing import ImageGenerator
 import sys
 
