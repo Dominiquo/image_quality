@@ -21,7 +21,7 @@ def run_basic_bin_classify_model(store_path, epochs=50, steps_per_epoch=2000, va
 	return None
 
 def run_fine_tune_CNN():
-	ft_CNN.fine_tune_CNN()
+	return ft_CNN.fine_tune_CNN()
 
 
 
@@ -34,4 +34,5 @@ def Main(args):
 	run_basic_bin_classify_model(store_path, epochs, steps_per_epoch, validation_steps)
 
 if __name__ == '__main__':
-	Main(sys.argv)
+	# Main(sys.argv)
+	run_fine_tune_CNN()

@@ -8,7 +8,9 @@ from keras.layers import Dropout, Flatten, Dense
 import models.vgg_16_keras as vgg
 
 
-def fine_tune_CNN():
+
+# TODO Make this more 
+def fine_tune_CNN(store_path='serialized_objects/fine_tune_cnn_weights.h5'):
 	# path to the model weights files.
 	top_model_weights_path = 'serialized_objects/bottleneck_fc_model.h5'
 	# dimensions of our images.
@@ -48,6 +50,8 @@ def fine_tune_CNN():
 		epochs=epochs,
 		validation_data=validation_generator,
 		validation_steps=nb_validation_samples // batch_size,
-		verbose=2)
-	
+		verbose=2)	
+
+	print 'storing weights at', store_path
+	model.save_weights(store_path)
 	return history
