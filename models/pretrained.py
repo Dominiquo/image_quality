@@ -1,4 +1,5 @@
 import numpy as np
+import cPickle
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
@@ -10,11 +11,10 @@ img_width, img_height = 150, 150
 top_model_weights_path = 'serialized_objects/bottleneck_fc_model.h5'
 bottleneck_trian_npy = 'serialized_objects/bottleneck_features_train.npy'
 bottleneck_val_npy = 'serialized_objects/bottleneck_features_validation.npy'
+train_val_labels_p = 'serialized_objects/top_model_sizes.p'
 
 train_data_dir = 'data/goodbadcombined/train/'
 validation_data_dir = 'data/goodbadcombined/validation/'
-nb_train_samples = 4000
-nb_validation_samples = 1600
 epochs = 50
 batch_size = 16
 
@@ -35,9 +35,14 @@ def save_bottlebeck_features():
         class_mode=None,
         shuffle=False)
 
+    train_steps = generator.samples / batch_size
+    train_samples = train_steps*batch_size
+    train_labels = generator.classes[:train_samples]
+
     print 'predict_generator bottleneck features train...'
     bottleneck_features_train = model.predict_generator(
-        generator, nb_train_samples // batch_size)
+        generator, train_steps)
+
     np.save(open(bottleneck_trian_npy, 'w'),
             bottleneck_features_train)
 
@@ -48,23 +53,29 @@ def save_bottlebeck_features():
         class_mode=None,
         shuffle=False)
 
+    validation_steps = generator.samples / batch_size
+    validation_samples = validation_steps * batch_size
+    validation_labels = generator.classes[:validation_samples]
+
     print 'predict_generator bottleneck features validation...'
     bottleneck_features_validation = model.predict_generator(
-        generator, nb_validation_samples // batch_size)
+        generator, validation_steps)
     np.save(open(bottleneck_val_npy, 'w'),
             bottleneck_features_validation)
+
+    cPickle.dump((train_labels, validation_labels), open(train_val_labels_p, 'wb'))
 
 
 def train_top_model():
     print 'train top model'
+    train_labels, validation_labels = cPickle.load(open(train_val_labels_p, 'rb'))
+    print 'loaded', len(train_labels), 'training labels and', len(validation_labels), 'validation labels.'
     print 'loading bottleneck_trian_npy...'
     train_data = np.load(open(bottleneck_trian_npy))
-    train_labels = np.array(
-        [0] * (nb_train_samples / 2) + [1] * (nb_train_samples / 2))
+    print 'loaded', len(train_data), 'training data samples'
     print 'loading bottleneck_val_npy...'
     validation_data = np.load(open(bottleneck_val_npy))
-    validation_labels = np.array(
-        [0] * (nb_validation_samples / 2) + [1] * (nb_validation_samples / 2))
+    print 'loaded', len(validation_data), 'validation data samples'
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
@@ -83,7 +94,3 @@ def train_top_model():
     print 'storing weights...'
     model.save_weights(top_model_weights_path)
     return history
-
-
-# save_bottlebeck_features()
-# train_top_model()
