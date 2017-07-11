@@ -32,7 +32,7 @@ def run_cnn_model(store_path, epochs=50, steps_per_epoch=2000, validation_steps=
 	train_generator, validation_generator = ImageGenerator.get_generator()
 
 	print 'getting CNN...'
-	model_cnn = CNN_models.get_cnn()
+	model_cnn = CNN_models.get_binary_classification_CNN()
 	print 'fitting model on training data'
 
 	history = model_cnn.fit_generator(

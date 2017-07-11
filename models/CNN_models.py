@@ -4,8 +4,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense
 
 
 
-def get_cnn():
-	input_shape = (150, 150, 3)
+def get_binary_classification_CNN(input_shape=(150, 150, 3)):
 	model = Sequential()
 	model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 	model.add(Activation('relu'))

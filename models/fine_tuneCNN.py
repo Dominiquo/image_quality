@@ -5,8 +5,8 @@ from keras import optimizers
 from keras.models import Sequential
 from keras.models import Model
 from keras.layers import Dropout, Flatten, Dense
-
 import models.vgg_16_keras as vgg
+
 
 def fine_tune_CNN():
 	# path to the model weights files.

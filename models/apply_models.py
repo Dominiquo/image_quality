@@ -4,7 +4,7 @@ from misc import utils
 from models import CNN_models as cnn
 
 def get_accuracy_threshold(model_path, data_path, pos=True, threshold=.5, size=(150,150), rescale_factor=(1./255)):
-	model = cnn.get_cnn()
+	model = cnn.get_binary_classification_CNN()
 	print 'loading weights...'
 	model.load_weights(model_path)
 	print 'rescaling images...'
