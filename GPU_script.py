@@ -20,9 +20,9 @@ def run_basic_bin_classify_model(store_path, epochs=50, steps_per_epoch=2000, va
 	model_cnn.save_weights(store_path) 
 	return None
 
+
 def run_fine_tune_CNN():
 	return ft_CNN.fine_tune_CNN()
-
 
 
 def Main(args):

@@ -9,11 +9,9 @@ import models.vgg_16_keras as vgg
 
 
 
-# TODO Make this more 
+# TODO Make this more generalized: Appears to need more computing power than I have right now
 def fine_tune_CNN(store_path='serialized_objects/fine_tune_cnn_weights.h5'):
-	# path to the model weights files.
 	top_model_weights_path = 'serialized_objects/bottleneck_fc_model.h5'
-	# dimensions of our images.
 	img_width, img_height = 150, 150
 	input_shape = (img_width, img_height, 3)
 	epochs = 50
@@ -34,8 +32,6 @@ def fine_tune_CNN(store_path='serialized_objects/fine_tune_cnn_weights.h5'):
 	top_model.add(Dense(1, activation='sigmoid'))
 	top_model.load_weights(top_model_weights_path)
 
-	# add the model on top of the convolutional base
-	# model.add(top_model)
 	model = Model(inputs=base_model.input, outputs=top_model(base_model.output))
 	for layer in model.layers[:15]:
 		layer.trainable = False
@@ -55,3 +51,4 @@ def fine_tune_CNN(store_path='serialized_objects/fine_tune_cnn_weights.h5'):
 	print 'storing weights at', store_path
 	model.save_weights(store_path)
 	return history
+

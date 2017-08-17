@@ -1,19 +1,95 @@
-import cv2
 import os
 import cPickle
 import numpy as np
+import time
+import random
+from keras.preprocessing.image import DirectoryIterator, load_img, img_to_array
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
-def load_data(data_dir, setting=1):
+####################################### DATA IO ####################################################
+def get_paths_labels(label_dir_dict):
+	# TODO: HANDLE NO SUCH DIRECTORY EXCEPTION
+	# TODO: HANDLE MORE THAN INTEGER LABELS
+	max_label = max(label_dir_dict.keys())
+	all_image_paths = []
+	all_labels = []
+	white_list_formats = {'png', 'jpg', 'jpeg', 'bmp'}
+
+	def in_white_list(fname, wlist):
+			for suffix in wlist:
+				if fname.lower().endswith(suffix): return True
+			return False
+
+	for label, dirs in label_dir_dict.iteritems():
+		current_vecs = []
+		for img_dir in dirs:
+			current_vecs.extend([os.path.join(img_dir, p) for p in os.listdir(img_dir) if in_white_list(p, white_list_formats)])
+		print 'Found', len(current_vecs), 'examples with label', label
+		label_vec = np.array([label for l in xrange(len(current_vecs))])
+		all_image_paths.extend(current_vecs)
+		all_labels.extend(label_vec)
+
+	return all_image_paths, np.array(all_labels, dtype='int32')
+
+
+def load_data_by_labels(all_image_paths, all_labels, grayscale, target_size):
+	all_feat_vecs = np.array([load_single_image_array(p, grayscale, target_size) for p in all_image_paths])
+	print 'all feature vector shape', all_feat_vecs.shape
+	return all_feat_vecs, all_labels
+
+
+def load_data_by_directory(data_dir, grayscale, target_size):
 	# ignore 'DS_Store' (problem with mac file storage)
 	all_paths = [os.path.join(data_dir, p) for p in os.listdir(data_dir) if p != '.DS_Store']
-	print 'loading all files from', data_dir, '...'
-	try:
-		all_images = [cv2.imread(p, setting) for p in all_paths]
-	except Exception as e:
-		print e
-		return None
-	return np.array(all_images)
+	n_images = len(all_paths)
+	if target_size != None:
+		col_channels = 3
+		x_len, y_len = target_size
+		arr_shape = (n_images, x_len, y_len) if grayscale else (n_images, x_len, y_len, col_channels)
+		all_images = np.empty(arr_shape)
+		print 'Feature vectors shape:', all_images.shape, 'from directory:', data_dir
+		start = time.time()
+		for i, im_path in enumerate(all_paths):
+			arr = load_single_image_array(im_path, grayscale, target_size).squeeze()
+			all_images[i] = arr
+		stop = time.time()
+	else:
+		start = time.time()
+		all_images = []
+		print 'loading images from', data_dir
+		for i, im_path in enumerate(all_paths):
+			arr = load_single_image_array(im_path, grayscale, None).squeeze()
+			all_images.append(arr)
+		all_images = np.array(all_images)
+		stop = time.time()
+	print 'Loaded', n_images, 'images in', round(stop - start, 2) , 'seconds.'
+	return all_images
+
+
+def shuffle_data(im_path_list, label_array):
+	intermediate_shuffle = zip(im_path_list, label_array)
+	random.shuffle(intermediate_shuffle)
+	tup_path, tup_labels = zip(*intermediate_shuffle)
+	return list(tup_path), np.array(tup_labels)
+
+
+def load_batch_images(batch_filenames, grayscale, target_size):
+	batch_size = len(batch_filenames)
+	x,y = target_size
+	if grayscale:
+		image_batch = np.empty((batch_size, x, y))	
+	else:
+		c = 3
+		image_batch = np.empty((batch_size, x, y, c))
+	for i in xrange(batch_size):
+		image_batch[i] = img_to_array(load_img(batch_filenames[i], grayscale=grayscale, target_size=target_size)).squeeze()
+	return image_batch
+	
+
+def load_single_image_array(im_path, grayscale, target_size):
+	return img_to_array(load_img(im_path, grayscale=grayscale, target_size=target_size))
 
 
 def load_object(stored_path):
@@ -28,21 +104,4 @@ def store_object(obj, store_path):
 		print 'stored object at', store_path
 		cPickle.dump(obj, outfile)
 	return True
-
-
-def apply_to_images(image_dir):
-	file_count = 0
-	edge_count = 0
-	print 'processing images from path:', image_dir, '...'
-	all_images = os.listdir(image_dir)
-	total_images = len(all_images)
-	for image_name in all_images:
-		# cavaet code because mac likes to add '.DS_Store' to everything
-		if image_name[0] == '.': continue
-		image_path = os.path.join(image_dir, image_name)
-		edge_count += sum_edges(image_path)
-		file_count += 1
-		if file_count % 100 == 0:
-			print round((float(file_count)/total_images)*100, 2), '%', 'complete'
-	return float(edge_count)/file_count
 

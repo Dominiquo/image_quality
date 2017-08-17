@@ -4,7 +4,7 @@ from keras.layers import Activation, Dropout, Flatten, Dense
 
 
 
-def get_binary_classification_CNN(input_shape=(150, 150, 3)):
+def get_multiclass_CNN(class_count=2, input_shape=(150, 150, 3)):
 	model = Sequential()
 	model.add(Conv2D(32, (3, 3), input_shape=input_shape))
 	model.add(Activation('relu'))
@@ -22,10 +22,11 @@ def get_binary_classification_CNN(input_shape=(150, 150, 3)):
 	model.add(Dense(64))
 	model.add(Activation('relu'))
 	model.add(Dropout(0.5))
-	model.add(Dense(1))
-	model.add(Activation('sigmoid'))
+	model.add(Dense(class_count))
+	model.add(Activation('softmax'))
 
-	model.compile(loss='binary_crossentropy',
+	model.compile(loss='categorical_crossentropy',
 	              optimizer='rmsprop',
 	              metrics=['accuracy'])
 	return model
+
