@@ -2,6 +2,8 @@ data/*
 serialized_objects/*
 */.DS_Store
 .DS_Store
+*.ipynb
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
