@@ -57,8 +57,8 @@ def quality_large_model():
 	print 'CREATING OUTPUT VALUES FROM TOP LEVEL MODEL'
 	pt.get_output_values(traingen, testgen, output_train, output_val, labels)
 
-	full_model_json = 'serialized_objects/0808/model_transf_obj_QUALITY.json'
-	weights_path = 'serialized_objects/0808/model_transf_weights_QUALITY.hd5'
+	full_model_json = 'serialized_objects/0818/model_transf_obj_QUALITY.json'
+	weights_path = 'serialized_objects/0818/model_transf_weights_QUALITY.hd5'
 	num_classes = len(label_dict.keys())
 	epochs = 100
 
