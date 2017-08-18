@@ -13,19 +13,19 @@ CBSD_FILES = 'cbsd_files'
 def get_disease_files():
 	file_prefix = '/home/ailab/Documents/niquo/image_quality/data/Severities_Final/'
 
-	cbb_files_L = [file_prefix + 'cbb-levels/cbb_2/',
+	cbb_files_L = [
 	            file_prefix + 'cbb-levels/cbb_3/',
 	            file_prefix + 'cbb-levels/cbb_4/',
 	            file_prefix + 'cbb-levels/cbb_5/']
-	cgm_files_L = [file_prefix + 'cgm-levels/cgm_2/',
+	cgm_files_L = [
 	            file_prefix + 'cgm-levels/cgm_3/',
 	            file_prefix + 'cgm-levels/cgm_4/',
 	            file_prefix + 'cgm-levels/cgm_5/',]
-	cmd_files_L = [file_prefix + 'cmd-levels/cmd_2/',
+	cmd_files_L = [
 	            file_prefix + 'cmd-levels/cmd_3/',
 	            file_prefix + 'cmd-levels/cmd_4/',
 	            file_prefix + 'cmd-levels/cmd_5/']
-	cbsd_files_L = [file_prefix + 'cbsd-levels/cbsd_2/',
+	cbsd_files_L = [
 	             file_prefix + 'cbsd-levels/cbsd_3/',
 	             file_prefix + 'cbsd-levels/cbsd_4/',
 	             file_prefix + 'cbsd-levels/cbsd_5/']
@@ -51,7 +51,7 @@ def five_class_identification():
 		print v
 
 	batch_size = 16 
-	target_size = (500, 500)
+	target_size = (300, 300)
 
 	print 'getting trainer object...'
 
@@ -65,14 +65,18 @@ def five_class_identification():
 	print 'CREATING OUTPUT VALUES FROM TOP LEVEL MODEL'
 	pt.get_output_values(traingen, testgen, output_train, output_val, labels)
 
-	full_model_json = 'serialized_objects/0808/model_object_DIS.json'
-	weights_path = 'serialized_objects/0808/model_weights_DIS.hd5'
+	full_model_json = 'serialized_objects/0818/model_object_DIS.json'
+	weights_path = 'serialized_objects/0818/model_weights_DIS.hd5'
 	num_classes = len(label_dict.keys())
 	epochs = 100
 
 	print 'CREATING PREPARING TO TRAIN LOWER DENSE MODEL...'
 	model_history = pt.train_top_model(full_model_json, weights_path, output_train,
                                    output_val, labels, epochs=epochs, num_classes=num_classes)
+
+	model_hist_path = 'serialized_objects/0818/model_severity_HISTORY.p'
+	with open(model_hist_path, 'w') as outfile:
+		cPickle.dump(model_history, outfile)
 
 	print "COMPLETE."
 	return True
