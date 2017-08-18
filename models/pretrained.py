@@ -19,6 +19,7 @@ def get_output_values(traingen, valgen, output_train, output_val, labels, train_
     if train_batches == None:
         train_batches = traingen.total_batches
         train_labels = to_categorical(traingen.classes, traingen.num_class)
+        total_samples_train = len(train_labels)
     else:
         total_samples_train = get_samples_for_batches(traingen, train_batches)
         train_labels = np.empty((total_samples_train))
