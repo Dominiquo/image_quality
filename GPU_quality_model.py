@@ -35,16 +35,17 @@ def quality_small_model():
 	json_path = 'serialized_objects/0818/small_cnn_quality_MODEL_0818.'
 	model.save_weights(weights_path)
 	model_json = model.to_json()
-    with open(json_path, 'w') as outfile:
-        outfile.write(model_json)
-    return True
+
+	with open(json_path, 'w') as outfile:
+		outfile.write(model_json)
+
+	return True
 
 def quality_large_model():
 	label_dict = get_label_dict()
 	batch_size = 16
 	target_size = (256, 256)
 	input_shape = target_size + (3,)
-	label_dict = {0: [blurry_path, busy_path, bad_path], 1: [clear_path]}
 
 	itrain = it.ImageTraining(label_dict)
 	traingen, testgen = itrain.get_train_test_generators(batch_size=batch_size, target_size=target_size)
