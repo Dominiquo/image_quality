@@ -1,6 +1,5 @@
 import os
 import cPickle
-import cv2
 import numpy as np
 import copy
 import time
