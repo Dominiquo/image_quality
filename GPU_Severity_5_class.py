@@ -1,14 +1,7 @@
 from datatypes import ImageTraining as it
-from models import Models, CNN_models
-from DataProcessing import transformations
 import numpy as np
 from misc import utils
-import os
-import cv2
-from collections import Counter
-from matplotlib import pyplot as plt
 import models.pretrained as pt
-import visualization.ModelHistoryPlot as mplot
 
 HEALTH_IMAGES = 'healthy_images'
 CGM_FILES = 'cgm_files'
@@ -57,7 +50,7 @@ def five_class_identification():
 		print k
 		print v
 
-	batch_size = 16
+	batch_size = 16 
 	target_size = (500, 500)
 
 	print 'getting trainer object...'
