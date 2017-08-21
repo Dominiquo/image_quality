@@ -31,8 +31,8 @@ def quality_small_model():
 	        validation_data=testgen,
 	        validation_steps=testgen.total_batches)
 
-	weights_path = 'serialized_objects/0818/small_cnn_quality_WEIGHTS_0818.h5'
-	json_path = 'serialized_objects/0818/small_cnn_quality_MODEL_0818.'
+	weights_path = 'serialized_objects/0821/small_cnn_quality_WEIGHTS.hd5'
+	json_path = 'serialized_objects/0821/small_cnn_quality_MODEL_0818.json'
 	model.save_weights(weights_path)
 	model_json = model.to_json()
 
@@ -50,15 +50,15 @@ def quality_large_model():
 	itrain = it.ImageTraining(label_dict)
 	traingen, testgen = itrain.get_train_test_generators(batch_size=batch_size, target_size=target_size)
 
-	output_train = 'serialized_objects/0818/outputtrain_QUALITY.npy'
-	output_val = 'serialized_objects/0818/outputval_QUALITY.npy'
-	labels = 'serialized_objects/0818/labels_QUALITY.p'
+	output_train = 'serialized_objects/0821/outputtrain_QUALITY.npy'
+	output_val = 'serialized_objects/0821/outputval_QUALITY.npy'
+	labels = 'serialized_objects/0821/labels_QUALITY.p'
 
 	print 'CREATING OUTPUT VALUES FROM TOP LEVEL MODEL'
 	pt.get_output_values(traingen, testgen, output_train, output_val, labels)
 
-	full_model_json = 'serialized_objects/0818/model_transf_obj_QUALITY.json'
-	weights_path = 'serialized_objects/0818/model_transf_weights_QUALITY.hd5'
+	full_model_json = 'serialized_objects/0821/model_transf_obj_QUALITY.json'
+	weights_path = 'serialized_objects/0821/model_transf_weights_QUALITY.hd5'
 	num_classes = len(label_dict.keys())
 	epochs = 100
 

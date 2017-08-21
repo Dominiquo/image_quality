@@ -51,32 +51,28 @@ def five_class_identification():
 		print v
 
 	batch_size = 16 
-	target_size = (300, 300)
+	target_size = (256, 256)
 
 	print 'getting trainer object...'
 
 	im_train= it.ImageTraining(label_dict)
 	traingen, testgen = im_train.get_train_test_generators(batch_size=batch_size, target_size=target_size)
 
-	output_train = 'serialized_objects/0818/outputtrain_DIS.npy'
-	output_val = 'serialized_objects/0818/outputval_DIS.npy'
-	labels = 'serialized_objects/0818/labels_DIS.p'
+	output_train = 'serialized_objects/0821/outputtrain_DIS.npy'
+	output_val = 'serialized_objects/0821/outputval_DIS.npy'
+	labels = 'serialized_objects/0821/labels_DIS.p'
 
 	print 'CREATING OUTPUT VALUES FROM TOP LEVEL MODEL'
 	pt.get_output_values(traingen, testgen, output_train, output_val, labels)
 
-	full_model_json = 'serialized_objects/0818/model_object_DIS.json'
-	weights_path = 'serialized_objects/0818/model_weights_DIS.hd5'
+	full_model_json = 'serialized_objects/0821/model_object_DIS.json'
+	weights_path = 'serialized_objects/0821/model_weights_DIS.hd5'
 	num_classes = len(label_dict.keys())
 	epochs = 100
 
 	print 'CREATING PREPARING TO TRAIN LOWER DENSE MODEL...'
 	model_history = pt.train_top_model(full_model_json, weights_path, output_train,
                                    output_val, labels, epochs=epochs, num_classes=num_classes)
-
-	model_hist_path = 'serialized_objects/0818/model_severity_HISTORY.p'
-	with open(model_hist_path, 'w') as outfile:
-		cPickle.dump(model_history, outfile)
 
 	print "COMPLETE."
 	return True
