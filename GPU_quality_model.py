@@ -66,11 +66,6 @@ def quality_large_model():
 	model_history = pt.train_top_model(full_model_json, weights_path, output_train,
                                    output_val, labels, epochs=epochs, num_classes=num_classes)
 
-
-	model_hist_path = 'serialized_objects/0818/model_transf_quality_HISTORY.p'
-	with open(model_hist_path, 'w') as outfile:
-		cPickle.dump(model_history, outfile)
-
 	print "COMPLETE."
 	return True
 
