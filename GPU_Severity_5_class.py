@@ -12,6 +12,7 @@ CBSD_FILES = 'cbsd_files'
 
 def get_disease_files():
 	file_prefix = '/home/ailab/Documents/niquo/image_quality/data/Severities_Final/'
+	# file_prefix = '/Users/niquo/Documents/SUMMER17/makerere_projects/image_training/data/Severities_Final/'
 
 	cbb_files_L = [
 	            file_prefix + 'cbb-levels/cbb_3/',

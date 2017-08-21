@@ -2,6 +2,7 @@ from datatypes import ImageTraining as it
 import numpy as np
 from misc import utils
 import models.pretrained as pt
+from models import CNN_models
 import cPickle
 
 
@@ -71,5 +72,5 @@ def quality_large_model():
 
 
 if __name__ == '__main__':
-	quality_large_model()
+	# quality_large_model()
 	quality_small_model()
