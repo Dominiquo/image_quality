@@ -27,7 +27,7 @@ def quality_small_model():
 
 	history = model.fit_generator(
 	        traingen,
-	        steps_per_epoch=traingen.total_batches*2,
+	        steps_per_epoch=traingen.total_batches,
 	        epochs=50,
 	        validation_data=testgen,
 	        validation_steps=testgen.total_batches)
