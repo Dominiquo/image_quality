@@ -28,12 +28,12 @@ def quality_small_model():
 	history = model.fit_generator(
 	        traingen,
 	        steps_per_epoch=traingen.total_batches*2,
-	        epochs=25,
+	        epochs=50,
 	        validation_data=testgen,
 	        validation_steps=testgen.total_batches)
 
-	weights_path = 'serialized_objects/0821/small_cnn_quality_WEIGHTS.hd5'
-	json_path = 'serialized_objects/0821/small_cnn_quality_MODEL_0818.json'
+	weights_path = 'serialized_objects/0821/small_cnn_quality_WEIGHTS_50.hd5'
+	json_path = 'serialized_objects/0821/small_cnn_quality_MODEL_50.json'
 	model.save_weights(weights_path)
 	model_json = model.to_json()
 
